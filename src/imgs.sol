@@ -73,4 +73,12 @@ contract imgs {
     locked = false;
     return tokenId;
   }
+  
+  function supportsInterface(bytes4 interfaceId) external pure returns (bool) {
+    return
+      interfaceId == 0x01ffc9a7 || // ERC165
+      interfaceId == 0x80ac58cd || // ERC721
+      interfaceId == 0x5b5e139f || // ERC721Metadata
+      interfaceId == 0x780e9d63;   // ERC721Enumerable
+  }
 }
