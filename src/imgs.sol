@@ -31,16 +31,16 @@ contract imgs {
     return tokenIdsByOwner[owner].length;
   }
   function tokenURI(uint256 _tokenId) external view returns (string memory) {
-    if (_tokenId >= totalSupply) throw InvalidTokenId();
+    if (_tokenId >= totalSupply) revert InvalidTokenId();
     return tokenIdToUrl[_tokenId];
   }
   function tokenByIndex(uint256 _index) external view returns (uint256) {
-    if (_index >= totalSupply) throw IndexOutOfBounds();
+    if (_index >= totalSupply) revert IndexOutOfBounds();
     return _index;
   }
   function tokenOfOwnerByIndex(address _owner, uint256 _index) external view returns (uint256) {
-    if (_owner == address(0)) throw ZeroAddress();
-    if (_index >= tokenIdsByOwner[_owner].length) throw IndexOutOfBounds();
+    if (_owner == address(0)) revert ZeroAddress();
+    if (_index >= tokenIdsByOwner[_owner].length) revert IndexOutOfBounds();
     return tokenIdsByOwner[_owner][_index];
   }
   function post(string memory url, uint256 price) external returns (uint256) {
@@ -52,11 +52,11 @@ contract imgs {
     return posts.length - 1;
   }
   function mint(uint256 postId) external payable returns (uint256) {
-    if (locked) throw ReentrantCall();
+    if (locked) revert ReentrantCall();
     locked = true;
-    if (postId >= posts.length) throw InvalidPostId();
+    if (postId >= posts.length) revert InvalidPostId();
     Post memory _post = posts[postId];
-    if (msg.value < _post.price) throw InsufficientPayment();
+    if (msg.value < _post.price) revert InsufficientPayment();
     
     uint256 tokenId = totalSupply;
     totalSupply++;
@@ -67,7 +67,7 @@ contract imgs {
     
     if (_post.price > 0) {
       (bool success, ) = payable(_post.creator).call{value: _post.price}("");
-      if (!success) throw TransferFailed();
+      if (!success) revert TransferFailed();
     }
     
     locked = false;
