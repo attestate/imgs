@@ -20,6 +20,7 @@ contract imgs {
   mapping(address => uint256[]) public tokenIdsByOwner;
   Post[] public posts;
   uint256 public totalSupply;
+  uint256 public postCount;
 
   function name() external view returns (string memory _name) {
     return "imgs";
@@ -44,12 +45,14 @@ contract imgs {
     return tokenIdsByOwner[_owner][_index];
   }
   function post(string memory url, uint256 price) external returns (uint256) {
+    uint256 postId = postCount;
     posts.push(Post({
       creator: msg.sender,
       url: url,
       price: price
     }));
-    return posts.length - 1;
+    postCount++;
+    return postId;
   }
   function mint(uint256 postId) external payable returns (uint256) {
     if (locked) revert ReentrantCall();

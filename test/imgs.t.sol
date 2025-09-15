@@ -58,6 +58,7 @@ contract ImgsTest is Test {
         
         uint256 postId = imgsContract.post(url, price);
         assertEq(postId, 0);
+        assertEq(imgsContract.postCount(), 1);
         
         (address creator, string memory storedUrl, uint256 storedPrice) = imgsContract.posts(0);
         assertEq(creator, address(this));
@@ -70,6 +71,7 @@ contract ImgsTest is Test {
         
         uint256 postId2 = imgsContract.post(url2, price2);
         assertEq(postId2, 1);
+        assertEq(imgsContract.postCount(), 2);
         
         (address creator2, string memory storedUrl2, uint256 storedPrice2) = imgsContract.posts(1);
         assertEq(creator2, address(this));
