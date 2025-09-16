@@ -6,7 +6,7 @@ contract imgs {
   error IndexOutOfBounds();
   error ZeroAddress();
   error InvalidPostId();
-  error InsufficientPayment();
+  error IncorrectPayment();
   error TransferFailed();
   error ReentrantCall();
   
@@ -61,7 +61,7 @@ contract imgs {
     locked = true;
     if (postId >= posts.length) revert InvalidPostId();
     Post memory _post = posts[postId];
-    if (msg.value < _post.price) revert InsufficientPayment();
+    if (msg.value != _post.price) revert IncorrectPayment();
     
     uint256 tokenId = totalSupply;
     totalSupply++;

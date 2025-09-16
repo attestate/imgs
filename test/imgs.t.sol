@@ -172,11 +172,24 @@ contract ImgsTest is Test {
         address minter = address(0xDEF);
         vm.deal(minter, 0.5 ether);
         vm.prank(minter);
-        vm.expectRevert(imgs.InsufficientPayment.selector);
+        vm.expectRevert(imgs.IncorrectPayment.selector);
         imgsContract.mint{value: 0.5 ether}(postId);
         
         // Verify nothing was minted
         assertEq(imgsContract.totalSupply(), 0);
+    }
+
+    function testMintWithExcessPayment() public {
+        uint256 postId = imgsContract.post("https://example.com/excess.png", 0.1 ether);
+
+        address minter = address(0x1234);
+        vm.deal(minter, 1 ether);
+        vm.prank(minter);
+        vm.expectRevert(imgs.IncorrectPayment.selector);
+        imgsContract.mint{value: 0.2 ether}(postId);
+
+        assertEq(imgsContract.totalSupply(), 0);
+        assertEq(imgsContract.balanceOf(minter), 0);
     }
     
     function testMintInvalidPostId() public {
