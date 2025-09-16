@@ -9,6 +9,9 @@ contract imgs {
   error InsufficientPayment();
   error TransferFailed();
   error ReentrantCall();
+  
+  // ERC-721 Transfer event
+  event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
   struct Post {
     address creator;
     string url;
@@ -67,6 +70,9 @@ contract imgs {
     ownerOf[tokenId] = msg.sender;
     tokenIdsByOwner[msg.sender].push(tokenId);
     tokenIdToUrl[tokenId] = _post.url;
+    
+    // Emit Transfer event for ERC-721 compliance
+    emit Transfer(address(0), msg.sender, tokenId);
     
     if (_post.price > 0) {
       (bool success, ) = payable(_post.creator).call{value: _post.price}("");
