@@ -10,7 +10,6 @@ contract imgs {
   error TransferFailed();
   error ReentrantCall();
   
-  // ERC-721 Transfer event
   event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
   struct Post {
     address creator;
@@ -71,7 +70,6 @@ contract imgs {
     tokenIdsByOwner[msg.sender].push(tokenId);
     tokenIdToUrl[tokenId] = _post.url;
     
-    // Emit Transfer event for ERC-721 compliance
     emit Transfer(address(0), msg.sender, tokenId);
     
     if (_post.price > 0) {
